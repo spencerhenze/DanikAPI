@@ -41,7 +41,7 @@ namespace DanikAPI.Models
 
 	    public int InseamMeasurement { get; set; }
 
-		public GkJacketSizeEnum JacketSize { get; set; }
+		public GkLeoAndJacketSizeEnum LeoAndJacketSize { get; set; }
 
 		public GkTorsoSizeEnum TorsoSize { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace DanikAPI.Models.Uniforms.Enums
 {
-	public enum GkJacketSizeEnum
+	public enum GkLeoAndJacketSizeEnum
 	{
 		// Child Sizes
 		ChildExtraExtraSmall,
