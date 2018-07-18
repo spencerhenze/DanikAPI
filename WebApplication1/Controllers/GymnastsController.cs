@@ -65,7 +65,7 @@ namespace DanikAPI.Controllers
 			// If training level has changed, check to see if new clothing is needed
 	        if (gymnast.Level != updatedGymnast.Level)
 	        {
-		        gymnast.NeedsLeo = ClothingUpdateHelper.CheckIfLeoNeeded(gymnast.Level, updatedGymnast.Level);
+		        gymnast.NeedsLeo = ClothingUpdateHelper.CheckIfLeoNeeded(gymnast, updatedGymnast);
 		        gymnast.NeedsJacket = ClothingUpdateHelper.ChekIfJacketNeeded(gymnast, updatedGymnast);
 	        }
 

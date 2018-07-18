@@ -4,12 +4,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using DanikAPI.Models;
 using DanikAPI.Models.Uniforms.Enums;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DanikAPI.Helpers
 {
 	public class ClothingUpdateHelper
 	{
-		public static bool CheckIfLeoNeeded(LevelsEnum previousLevel, LevelsEnum newLevel)
+		public static bool CheckIfLeoNeeded(Gymnast gymnast, Gymnast updatedGymnast)
+		{
+			var needsLeoBecauseOfLevelChange = CheckIfLeoNeededBecauseOfLevelChange(gymnast.Level, updatedGymnast.Level);
+
+			if (needsLeoBecauseOfLevelChange)
+			{
+				return true;
+			}
+
+			var needsLeoBecauseOfSizeChange = CheckIfLeoNeededBecauseOfSizeChange(gymnast, updatedGymnast);
+
+			return false;
+		}
+
+		private static bool CheckIfLeoNeededBecauseOfSizeChange(Gymnast gymnast, Gymnast updatedGymnast)
+		{
+			// need to create this method
+			var updatedLeoSize = GetLeoSizeFromMeasurements(updatedGymnast.ChestMeasurement, updatedGymnast.WaistMeasurement, updatedGymnast.HipsMeasurement);
+			var updatedTorsoSize = GetTorsoSizeFromMeasurements(updatedLeoSize, updatedGymnast.TorsoMeasurement);
+		}
+
+		private static bool CheckIfLeoNeededBecauseOfLevelChange(LevelsEnum previousLevel, LevelsEnum newLevel)
 		{
 			if (previousLevel < LevelsEnum.Level5 && newLevel == LevelsEnum.Level5)
 			{
@@ -37,72 +59,73 @@ namespace DanikAPI.Helpers
 				var updatedJacketSize = GetJacketSizeFromMeasurements(updatedGymnast.ChestMeasurement, updatedGymnast.WaistMeasurement);
 				var updatedTorsoSize = GetTorsoSizeFromMeasurements(updatedJacketSize, updatedGymnast.TorsoMeasurement);
 
-				return (updatedJacketSize != gymnast.JacketSize || updatedTorsoSize != gymnast.TorsoSize);
+				return (updatedJacketSize != gymnast.LeoAndJacketSize || updatedTorsoSize != gymnast.TorsoSize);
 			}
 			return false;
 		}
 
-		private static GkJacketSizeEnum GetJacketSizeFromMeasurements(int chestMeasurement, int waistMeasurement)
+
+		private static GkLeoAndJacketSizeEnum GetJacketSizeFromMeasurements(int chestMeasurement, int waistMeasurement)
 		{
 
 			if ((chestMeasurement >= 17 && chestMeasurement <= 19) && (waistMeasurement >= 18 && waistMeasurement <=19))
 			{
-				return GkJacketSizeEnum.ChildExtraExtraSmall;
+				return GkLeoAndJacketSizeEnum.ChildExtraExtraSmall;
 			}
 			if ((chestMeasurement >= 20 && chestMeasurement <= 22) && (waistMeasurement >= 19 && waistMeasurement <= 21))
 			{
-				return GkJacketSizeEnum.ChildExtraSmall;
+				return GkLeoAndJacketSizeEnum.ChildExtraSmall;
 			}
 			if ((chestMeasurement >= 23 && chestMeasurement <= 26) && (waistMeasurement >= 21 && waistMeasurement <= 22))
 			{
-				return GkJacketSizeEnum.ChildSmall;
+				return GkLeoAndJacketSizeEnum.ChildSmall;
 			}
 			if ((chestMeasurement >= 26 && chestMeasurement <= 29) && (waistMeasurement >= 22 && waistMeasurement <= 23))
 			{
-				return GkJacketSizeEnum.ChildMedium;
+				return GkLeoAndJacketSizeEnum.ChildMedium;
 			}
 			if ((chestMeasurement >= 29 && chestMeasurement <= 31) && (waistMeasurement >= 23 && waistMeasurement <= 25))
 			{
-				return GkJacketSizeEnum.ChildLarge;
+				return GkLeoAndJacketSizeEnum.ChildLarge;
 			}
 			if ((chestMeasurement >= 32 && chestMeasurement <= 34) && (waistMeasurement >= 23 && waistMeasurement <= 25))
 			{
-				return GkJacketSizeEnum.AdultExtraSmall;
+				return GkLeoAndJacketSizeEnum.AdultExtraSmall;
 			}
 			if ((chestMeasurement >= 33 && chestMeasurement <= 35) && (waistMeasurement >= 25 && waistMeasurement <= 26))
 			{
-				return GkJacketSizeEnum.AdultSmall;
+				return GkLeoAndJacketSizeEnum.AdultSmall;
 			}
 			if ((chestMeasurement >= 35 && chestMeasurement <= 36) && (waistMeasurement >= 26 && waistMeasurement <= 27))
 			{
-				return GkJacketSizeEnum.AdultMedium;
+				return GkLeoAndJacketSizeEnum.AdultMedium;
 			}
 			if ((chestMeasurement >= 36 && chestMeasurement <= 37) && (waistMeasurement >= 28 && waistMeasurement <= 29))
 			{
-				return GkJacketSizeEnum.AdultLarge;
+				return GkLeoAndJacketSizeEnum.AdultLarge;
 			}
 			if ((chestMeasurement >= 37 && chestMeasurement <= 39) && (waistMeasurement >= 29 && waistMeasurement <= 30))
 			{
-				return GkJacketSizeEnum.AdultExtraLarge;
+				return GkLeoAndJacketSizeEnum.AdultExtraLarge;
 			}
 			if ((chestMeasurement >= 39 && chestMeasurement <= 42) && (waistMeasurement >= 30 && waistMeasurement <= 33))
 			{
-				return GkJacketSizeEnum.Adult2Xl;
+				return GkLeoAndJacketSizeEnum.Adult2Xl;
 			}
 			if ((chestMeasurement >= 41 && chestMeasurement <= 44) && (waistMeasurement >= 32 && waistMeasurement <= 35))
 			{
-				return GkJacketSizeEnum.Adult3Xl;
+				return GkLeoAndJacketSizeEnum.Adult3Xl;
 			}
 			if ((chestMeasurement >= 43 && chestMeasurement <= 46) && (waistMeasurement >= 34 && waistMeasurement <= 37))
 			{
-				return GkJacketSizeEnum.Adult4Xl;
+				return GkLeoAndJacketSizeEnum.Adult4Xl;
 			}
-			return GkJacketSizeEnum.Unmatched;
+			return GkLeoAndJacketSizeEnum.Unmatched;
 		}
 
-		private static GkTorsoSizeEnum GetTorsoSizeFromMeasurements(GkJacketSizeEnum jacketSize, int torsoMeasurement)
+		private static GkTorsoSizeEnum GetTorsoSizeFromMeasurements(GkLeoAndJacketSizeEnum leoAndJacketSize, int torsoMeasurement)
 		{
-			if (jacketSize == GkJacketSizeEnum.ChildExtraExtraSmall)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.ChildExtraExtraSmall)
 			{
 				if (torsoMeasurement < 34 || (torsoMeasurement >= 34 && torsoMeasurement <= 36))
 				{
@@ -113,7 +136,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.ChildExtraSmall)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.ChildExtraSmall)
 			{
 				if (torsoMeasurement >= 37 && torsoMeasurement <= 39)
 				{
@@ -124,7 +147,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.ChildSmall)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.ChildSmall)
 			{
 				if (torsoMeasurement >= 40 && torsoMeasurement <= 42)
 				{
@@ -135,7 +158,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.ChildMedium)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.ChildMedium)
 			{
 				if (torsoMeasurement >= 43 && torsoMeasurement <= 45)
 				{
@@ -146,7 +169,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.ChildLarge)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.ChildLarge)
 			{
 				if (torsoMeasurement >= 46 && torsoMeasurement <= 48)
 				{
@@ -157,7 +180,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.AdultExtraSmall)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.AdultExtraSmall)
 			{
 				if (torsoMeasurement >= 49 && torsoMeasurement <= 51)
 				{
@@ -168,7 +191,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.AdultSmall)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.AdultSmall)
 			{
 				if (torsoMeasurement >= 52 && torsoMeasurement <= 54)
 				{
@@ -179,7 +202,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.AdultMedium)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.AdultMedium)
 			{
 				if (torsoMeasurement >= 55 && torsoMeasurement <= 56)
 				{
@@ -190,7 +213,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.AdultLarge)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.AdultLarge)
 			{
 				if (torsoMeasurement >= 57 && torsoMeasurement <= 59)
 				{
@@ -201,7 +224,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.AdultExtraLarge)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.AdultExtraLarge)
 			{
 				if (torsoMeasurement >= 60 && torsoMeasurement <= 62)
 				{
@@ -212,7 +235,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.Adult2Xl)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.Adult2Xl)
 			{
 				if (torsoMeasurement >= 63 && torsoMeasurement <= 65)
 				{
@@ -223,7 +246,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.Adult3Xl)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.Adult3Xl)
 			{
 				if (torsoMeasurement >= 65 && torsoMeasurement <= 67)
 				{
@@ -234,7 +257,7 @@ namespace DanikAPI.Helpers
 					return GkTorsoSizeEnum.RegularTorso;
 				}
 			}
-			if (jacketSize == GkJacketSizeEnum.Adult4Xl)
+			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.Adult4Xl)
 			{
 				if (torsoMeasurement >= 67 && torsoMeasurement <= 69)
 				{
