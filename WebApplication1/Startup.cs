@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DanikAPI.Helpers;
 using DanikAPI.Models;
+using DanikAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +35,7 @@ namespace DanikAPI
 				.AddEntityFrameworkStores<ApplicationDbContext>()
 				.AddDefaultTokenProviders();
 
+
 			services.Configure<IdentityOptions>(options =>
 			{
 				// Password Settings
@@ -53,6 +56,7 @@ namespace DanikAPI
 
 			});
 
+			services.AddSingleton<IClothingUpdateService, ClothingUpdateService>();
 
 			services.AddMvc();
 		}
