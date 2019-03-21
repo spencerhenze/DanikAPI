@@ -12,45 +12,45 @@ using System.Threading.Tasks;
 namespace DanikAPI.Controllers
 {
 	[Produces("application/json")]
-	[Route("api/Sessions")]
-	public class SessionsController : Controller
+	[Route("api/Tests")]
+	public class TestsController : Controller
 	{
 		private readonly ApplicationDbContext _context;
 
-		public SessionsController(ApplicationDbContext context, IClothingUpdateService clothingService)
+		public TestsController(ApplicationDbContext context, IClothingUpdateService clothingService)
 		{
 			_context = context;
 		}
 
-		// GET: api/Sessions
+		// GET: api/Tests
 		[HttpGet]
-		public async Task<IActionResult> GetSessions()
+		public async Task<IActionResult> GetTests()
 		{
-			return Ok(await _context.Sessions.ToListAsync());
+			return Ok(await _context.Tests.ToListAsync());
 		}
 
-		// GET: api/Sessions/5
+		// GET: api/Tests/5
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetSession([FromRoute] int id)
+		public async Task<IActionResult> GetTest([FromRoute] int id)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-			var session = await _context.Sessions.SingleOrDefaultAsync(m => m.Id == id);
+			var test = await _context.Tests.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (session == null)
+			if (test == null)
 			{
 				return NotFound();
 			}
 
-			return Ok(session);
+			return Ok(test);
 		}
 
-		// PUT: api/Sessions
+		// PUT: api/Tests
 		[HttpPut]
-		public async Task<IActionResult> PutSession([FromBody] Session updatedSession)
+		public async Task<IActionResult> PutTest([FromBody] Test updatedTest)
 		{
 			try
 			{
@@ -59,13 +59,12 @@ namespace DanikAPI.Controllers
 					return BadRequest(ModelState);
 				}
 
-				var sessionInDb = await _context.Sessions.FirstOrDefaultAsync(g => g.Id == updatedSession.Id);
-				if (sessionInDb == null)
+				var testInDb = await _context.Tests.FirstOrDefaultAsync(g => g.Id == updatedTest.Id);
+				if (testInDb == null)
 				{
 					throw new KeyNotFoundException();
 				}
-
-				_context.Entry(sessionInDb).CurrentValues.SetValues(updatedSession);
+				_context.Entry(testInDb).CurrentValues.SetValues(updatedTest);
 				await _context.SaveChangesAsync();
 
 				return Ok();
@@ -80,9 +79,9 @@ namespace DanikAPI.Controllers
 			}
 		}
 
-		// POST: api/Sessions
+		// POST: api/Tests
 		[HttpPost]
-		public async Task<IActionResult> AddSession([FromBody] Session session)
+		public async Task<IActionResult> AddTest([FromBody] Test test)
 		{
 			try
 			{
@@ -91,10 +90,10 @@ namespace DanikAPI.Controllers
 					throw new InvalidDataException();
 				}
 
-				_context.Sessions.Add(session);
+				_context.Tests.Add(test);
 				await _context.SaveChangesAsync();
 
-				return CreatedAtAction("GetSession", new { id = session.Id }, session);
+				return CreatedAtAction("GetTest", new { id = test.Id }, test);
 			}
 			catch (Exception ex)
 			{
@@ -106,9 +105,9 @@ namespace DanikAPI.Controllers
 			}
 		}
 
-		// DELETE: api/Sessions/5
+		// DELETE: api/Tests/5
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteSession([FromRoute] int id)
+		public async Task<IActionResult> DeleteTest([FromRoute] int id)
 		{
 			try
 			{
@@ -117,13 +116,13 @@ namespace DanikAPI.Controllers
 					throw new InvalidDataException();
 				}
 
-				var session  = await _context.Sessions.SingleOrDefaultAsync(m => m.Id == id);
-				if (session == null)
+				var test  = await _context.Tests.SingleOrDefaultAsync(m => m.Id == id);
+				if (test == null)
 				{
 					return NotFound();
 				}
 
-				_context.Sessions.Remove(session);
+				_context.Tests.Remove(test);
 				await _context.SaveChangesAsync();
 
 				return Ok();
