@@ -12,45 +12,45 @@ using System.Threading.Tasks;
 namespace DanikAPI.Controllers
 {
 	[Produces("application/json")]
-	[Route("api/Tests")]
-	public class TestsController : Controller
+	[Route("api/Payments")]
+	public class PaymentsController : Controller
 	{
 		private readonly ApplicationDbContext _context;
 
-		public TestsController(ApplicationDbContext context)
+		public PaymentsController(ApplicationDbContext context)
 		{
 			_context = context;
 		}
 
-		// GET: api/Tests
+		// GET: api/Payments
 		[HttpGet]
-		public async Task<IActionResult> GetTests()
+		public IEnumerable<Payment> GetPayments()
 		{
-			return Ok(await _context.Tests.ToListAsync());
+			return _context.Payments;
 		}
 
-		// GET: api/Tests/5
+		// GET: api/Payments/5
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetTest([FromRoute] int id)
+		public async Task<IActionResult> GetPayment([FromRoute] int id)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-			var test = await _context.Tests.SingleOrDefaultAsync(m => m.Id == id);
+			var payment = await _context.Payments.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (test == null)
+			if (payment == null)
 			{
 				return NotFound();
 			}
 
-			return Ok(test);
+			return Ok(payment);
 		}
 
-		// PUT: api/Tests
+		// PUT: api/Payments
 		[HttpPut]
-		public async Task<IActionResult> PutTest([FromBody] Test updatedTest)
+		public async Task<IActionResult> UpdatePayment([FromBody] Payment updatedPayment)
 		{
 			try
 			{
@@ -59,12 +59,12 @@ namespace DanikAPI.Controllers
 					return BadRequest(ModelState);
 				}
 
-				var testInDb = await _context.Tests.FirstOrDefaultAsync(g => g.Id == updatedTest.Id);
-				if (testInDb == null)
+				var paymentInDb = await _context.Payments.FirstOrDefaultAsync(g => g.Id == updatedPayment.Id);
+				if (paymentInDb == null)
 				{
 					throw new KeyNotFoundException();
 				}
-				_context.Entry(testInDb).CurrentValues.SetValues(updatedTest);
+				_context.Entry(paymentInDb).CurrentValues.SetValues(updatedPayment);
 				await _context.SaveChangesAsync();
 
 				return Ok();
@@ -79,9 +79,9 @@ namespace DanikAPI.Controllers
 			}
 		}
 
-		// POST: api/Tests
+		// POST: api/Payments
 		[HttpPost]
-		public async Task<IActionResult> AddTest([FromBody] Test test)
+		public async Task<IActionResult> AddPayment([FromBody] Payment payment)
 		{
 			try
 			{
@@ -90,10 +90,10 @@ namespace DanikAPI.Controllers
 					throw new InvalidDataException();
 				}
 
-				_context.Tests.Add(test);
+				_context.Payments.Add(payment);
 				await _context.SaveChangesAsync();
 
-				return CreatedAtAction("GetTest", new { id = test.Id }, test);
+				return CreatedAtAction("GetPayment", new { id = payment.Id }, payment);
 			}
 			catch (Exception ex)
 			{
@@ -105,9 +105,9 @@ namespace DanikAPI.Controllers
 			}
 		}
 
-		// DELETE: api/Tests/5
+		// DELETE: api/Payments/5
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteTest([FromRoute] int id)
+		public async Task<IActionResult> DeletePayment([FromRoute] int id)
 		{
 			try
 			{
@@ -116,16 +116,16 @@ namespace DanikAPI.Controllers
 					throw new InvalidDataException();
 				}
 
-				var test  = await _context.Tests.SingleOrDefaultAsync(m => m.Id == id);
-				if (test == null)
+				var payment = await _context.Payments.SingleOrDefaultAsync(m => m.Id == id);
+				if (payment == null)
 				{
 					return NotFound();
 				}
 
-				_context.Tests.Remove(test);
+				_context.Payments.Remove(payment);
 				await _context.SaveChangesAsync();
 
-				return Ok();
+				return Ok(payment);
 			}
 			catch (Exception ex)
 			{
@@ -135,6 +135,11 @@ namespace DanikAPI.Controllers
 				}
 				return StatusCode(StatusCodes.Status500InternalServerError);
 			}
+		}
+
+		private bool PaymentExists(int id)
+		{
+			return _context.Payments.Any(e => e.Id == id);
 		}
 	}
 }

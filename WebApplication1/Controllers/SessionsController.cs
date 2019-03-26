@@ -17,7 +17,7 @@ namespace DanikAPI.Controllers
 	{
 		private readonly ApplicationDbContext _context;
 
-		public SessionsController(ApplicationDbContext context, IClothingUpdateService clothingService)
+		public SessionsController(ApplicationDbContext context)
 		{
 			_context = context;
 		}

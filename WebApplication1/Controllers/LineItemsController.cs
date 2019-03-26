@@ -12,45 +12,40 @@ using System.Threading.Tasks;
 namespace DanikAPI.Controllers
 {
 	[Produces("application/json")]
-	[Route("api/Tests")]
-	public class TestsController : Controller
+	[Route("api/LineItems")]
+	public class LineItemsController : Controller
 	{
 		private readonly ApplicationDbContext _context;
 
-		public TestsController(ApplicationDbContext context)
+		public LineItemsController(ApplicationDbContext context)
 		{
 			_context = context;
 		}
 
-		// GET: api/Tests
-		[HttpGet]
-		public async Task<IActionResult> GetTests()
-		{
-			return Ok(await _context.Tests.ToListAsync());
-		}
+		// GET: api/LineItems
+//		[HttpGet]
+//		public async Task<IActionResult> GetLineItems()
+//		{
+//			return Ok(await _context.LineItems.ToListAsync());
+//		}
 
-		// GET: api/Tests/5
-		[HttpGet("{id}")]
-		public async Task<IActionResult> GetTest([FromRoute] int id)
+		// GET: api/LineItems/5
+		[HttpGet("{gymnastId}")]
+		public async Task<IActionResult> GetLineItemsByGymnastId([FromRoute] int gymnastId)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-			var test = await _context.Tests.SingleOrDefaultAsync(m => m.Id == id);
+			var lineItems = await _context.LineItems.Where(l => l.GymnastId == gymnastId).ToListAsync();
 
-			if (test == null)
-			{
-				return NotFound();
-			}
-
-			return Ok(test);
+			return Ok(lineItems);
 		}
 
-		// PUT: api/Tests
+		// PUT: api/LineItems
 		[HttpPut]
-		public async Task<IActionResult> PutTest([FromBody] Test updatedTest)
+		public async Task<IActionResult> UpdateLineItem([FromBody] LineItem updatedLineItem)
 		{
 			try
 			{
@@ -59,12 +54,12 @@ namespace DanikAPI.Controllers
 					return BadRequest(ModelState);
 				}
 
-				var testInDb = await _context.Tests.FirstOrDefaultAsync(g => g.Id == updatedTest.Id);
-				if (testInDb == null)
+				var lineItemInDb = await _context.LineItems.FirstOrDefaultAsync(g => g.Id == updatedLineItem.Id);
+				if (lineItemInDb == null)
 				{
 					throw new KeyNotFoundException();
 				}
-				_context.Entry(testInDb).CurrentValues.SetValues(updatedTest);
+				_context.Entry(lineItemInDb).CurrentValues.SetValues(updatedLineItem);
 				await _context.SaveChangesAsync();
 
 				return Ok();
@@ -79,9 +74,9 @@ namespace DanikAPI.Controllers
 			}
 		}
 
-		// POST: api/Tests
+		// POST: api/LineItems
 		[HttpPost]
-		public async Task<IActionResult> AddTest([FromBody] Test test)
+		public async Task<IActionResult> AddLineItem([FromBody] LineItem lineItem)
 		{
 			try
 			{
@@ -90,10 +85,10 @@ namespace DanikAPI.Controllers
 					throw new InvalidDataException();
 				}
 
-				_context.Tests.Add(test);
+				_context.LineItems.Add(lineItem);
 				await _context.SaveChangesAsync();
 
-				return CreatedAtAction("GetTest", new { id = test.Id }, test);
+				return Ok();
 			}
 			catch (Exception ex)
 			{
@@ -105,27 +100,22 @@ namespace DanikAPI.Controllers
 			}
 		}
 
-		// DELETE: api/Tests/5
+		// DELETE: api/LineItems/5
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteTest([FromRoute] int id)
+		public async Task<IActionResult> DeleteLineItem([FromRoute] int id)
 		{
 			try
 			{
-				if (!ModelState.IsValid)
-				{
-					throw new InvalidDataException();
-				}
-
-				var test  = await _context.Tests.SingleOrDefaultAsync(m => m.Id == id);
-				if (test == null)
+				var lineItem = await _context.LineItems.SingleOrDefaultAsync(l => l.Id == id);
+				if (lineItem == null)
 				{
 					return NotFound();
 				}
 
-				_context.Tests.Remove(test);
+				_context.LineItems.Remove(lineItem);
 				await _context.SaveChangesAsync();
 
-				return Ok();
+				return Ok(lineItem);
 			}
 			catch (Exception ex)
 			{
