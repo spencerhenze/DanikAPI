@@ -19,5 +19,8 @@ namespace DanikAPI.Models
 
 		[Required]
 		public bool Active { get; set; }
+
+		// Relationships
+		public List<Test> Tests { get; set; }
 	}
 }

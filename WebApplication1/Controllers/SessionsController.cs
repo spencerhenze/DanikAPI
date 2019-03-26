@@ -24,9 +24,23 @@ namespace DanikAPI.Controllers
 
 		// GET: api/Sessions
 		[HttpGet]
-		public async Task<IActionResult> GetSessions()
+		public async Task<IActionResult> GetAllSessions()
 		{
 			return Ok(await _context.Sessions.ToListAsync());
+		}
+
+		// GET: api/Sessions/Open
+		[HttpGet("Open")]
+		public async Task<IActionResult> GetOpenSessions()
+		{
+			return Ok(await _context.Sessions.Where(s => s.Active).ToListAsync());
+		}
+
+		// GET: api/Sessions/Closed
+		[HttpGet("Closed")]
+		public async Task<IActionResult> GetClosedSessions()
+		{
+			return Ok(await _context.Sessions.Where(s => s.Active).ToListAsync());
 		}
 
 		// GET: api/Sessions/5

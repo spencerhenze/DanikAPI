@@ -129,7 +129,9 @@ namespace DanikAPI.Controllers
 					return NotFound();
 				}
 
-				_context.Gymnasts.Remove(gymnast);
+
+				_context.Gymnasts.Remove(gymnast);				
+
 				await _context.SaveChangesAsync();
 
 				return Ok(gymnast);

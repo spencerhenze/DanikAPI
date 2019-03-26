@@ -1,5 +1,4 @@
 ﻿using DanikAPI.Models;
-using DanikAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,29 +22,28 @@ namespace DanikAPI.Controllers
 		}
 
 		// GET: api/Tests
-		[HttpGet]
-		public async Task<IActionResult> GetTests()
+		//		[HttpGet]
+		//		public async Task<IActionResult> GetTests()
+		//		{
+		//			return Ok(await _context.Tests.ToListAsync());
+		//		}
+
+		// GET: api/Tests/Gymnasts/5
+		[HttpGet("{Gymnasts/gymnastId}")]
+		public async Task<IActionResult> GetGymnastTests([FromRoute] int gymnastId)
 		{
-			return Ok(await _context.Tests.ToListAsync());
+			var tests = await _context.Tests.Where(t => t.GymnastId == gymnastId).ToListAsync();
+
+			return Ok(tests);
 		}
 
-		// GET: api/Tests/5
-		[HttpGet("{id}")]
-		public async Task<IActionResult> GetTest([FromRoute] int id)
+		// GET: api/Tests/Sessions/5
+		[HttpGet("Sessions/{sessionId}")]
+		public async Task<IActionResult> GetSessionTests([FromRoute] int sessionId)
 		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
+			var tests = await _context.Tests.Where(t => t.SessionId == sessionId).ToListAsync();
 
-			var test = await _context.Tests.SingleOrDefaultAsync(m => m.Id == id);
-
-			if (test == null)
-			{
-				return NotFound();
-			}
-
-			return Ok(test);
+			return Ok(tests);
 		}
 
 		// PUT: api/Tests
@@ -93,7 +91,7 @@ namespace DanikAPI.Controllers
 				_context.Tests.Add(test);
 				await _context.SaveChangesAsync();
 
-				return CreatedAtAction("GetTest", new { id = test.Id }, test);
+				return Ok();
 			}
 			catch (Exception ex)
 			{
@@ -116,7 +114,7 @@ namespace DanikAPI.Controllers
 					throw new InvalidDataException();
 				}
 
-				var test  = await _context.Tests.SingleOrDefaultAsync(m => m.Id == id);
+				var test = await _context.Tests.SingleOrDefaultAsync(m => m.Id == id);
 				if (test == null)
 				{
 					return NotFound();
