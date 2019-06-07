@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace DanikAPI.Controllers
 {
 	[Produces("application/json")]
-	[Route("api/Tests")]
+    [Route("[controller]")]
 	public class TestsController : Controller
 	{
 		private readonly ApplicationDbContext _context;

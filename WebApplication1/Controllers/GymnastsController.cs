@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace DanikAPI.Controllers
 {
 	[Produces("application/json")]
-	[Route("api/Gymnasts")]
+    [Route("[controller]")]
 	public class GymnastsController : Controller
 	{
 		private readonly ApplicationDbContext _context;
