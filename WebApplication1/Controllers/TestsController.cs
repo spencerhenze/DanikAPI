@@ -29,7 +29,7 @@ namespace DanikAPI.Controllers
 		//		}
 
 		// GET: api/Tests/Gymnasts/5
-		[HttpGet("{Gymnasts/gymnastId}")]
+		[HttpGet("gymnasts/{gymnastId}")]
 		public async Task<IActionResult> GetGymnastTests([FromRoute] int gymnastId)
 		{
 			var tests = await _context.Tests.Where(t => t.GymnastId == gymnastId).ToListAsync();
@@ -38,7 +38,7 @@ namespace DanikAPI.Controllers
 		}
 
 		// GET: api/Tests/Sessions/5
-		[HttpGet("Sessions/{sessionId}")]
+		[HttpGet("sessions/{sessionId}")]
 		public async Task<IActionResult> GetSessionTests([FromRoute] int sessionId)
 		{
 			var tests = await _context.Tests.Where(t => t.SessionId == sessionId).ToListAsync();
