@@ -30,8 +30,10 @@ namespace DanikAPI.Models
 		//Relationships
 		[Required]
 		public int GymnastId { get; set; }
+		public Gymnast Gymnast { get; set; }
 
 		[Required]
 		public int LineItemId { get; set; }
+		public LineItem LineItem { get; set; }
 	}
 }

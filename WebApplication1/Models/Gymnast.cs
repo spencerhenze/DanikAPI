@@ -47,6 +47,8 @@ namespace DanikAPI.Models
 
 
 		// related
+		public List<LineItem> LineItems { get; set; }
 		public List<Payment> Payments { get; set; }
+		public List<Test> Tests { get; set; }
     }
 }

@@ -1,16 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DanikAPI.Models;
+﻿using DanikAPI.Models;
 using DanikAPI.Models.Uniforms.Enums;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using DanikAPI.Services;
 
 namespace DanikAPI.Helpers
 {
-	public class ClothingUpdateHelper
+	public class ClothingUpdateService : IClothingUpdateService
 	{
-		public static bool CheckIfLeoNeeded(Gymnast gymnast, Gymnast updatedGymnast)
+		public void SetGymnastClothingNeedsFlags(Gymnast gymnast, Gymnast updatedGymnast)
+		{
+			if (gymnast.Level != updatedGymnast.Level)
+			{
+				gymnast.NeedsLeo = CheckIfLeoNeeded(gymnast, updatedGymnast);
+				gymnast.NeedsJacket = ChekIfJacketNeeded(gymnast, updatedGymnast);
+			}
+		}
+
+		public bool CheckIfLeoNeeded(Gymnast gymnast, Gymnast updatedGymnast)
 		{
 			var needsLeoBecauseOfLevelChange = CheckIfLeoNeededBecauseOfLevelChange(gymnast.Level, updatedGymnast.Level);
 
@@ -24,15 +29,15 @@ namespace DanikAPI.Helpers
 			return false;
 		}
 
-		private static bool CheckIfLeoNeededBecauseOfSizeChange(Gymnast gymnast, Gymnast updatedGymnast)
+		private bool CheckIfLeoNeededBecauseOfSizeChange(Gymnast gymnast, Gymnast updatedGymnast)
 		{
 			// need to create this method
-//			var updatedLeoSize = GetLeoSizeFromMeasurements(updatedGymnast.ChestMeasurement, updatedGymnast.WaistMeasurement, updatedGymnast.HipsMeasurement);
-//			var updatedTorsoSize = GetTorsoSizeFromMeasurements(updatedLeoSize, updatedGymnast.TorsoMeasurement);
-            return true;
-        }
+			//			var updatedLeoSize = GetLeoSizeFromMeasurements(updatedGymnast.ChestMeasurement, updatedGymnast.WaistMeasurement, updatedGymnast.HipsMeasurement);
+			//			var updatedTorsoSize = GetTorsoSizeFromMeasurements(updatedLeoSize, updatedGymnast.TorsoMeasurement);
+			return true;
+		}
 
-		private static bool CheckIfLeoNeededBecauseOfLevelChange(LevelsEnum previousLevel, LevelsEnum newLevel)
+		private bool CheckIfLeoNeededBecauseOfLevelChange(LevelsEnum previousLevel, LevelsEnum newLevel)
 		{
 			if (previousLevel < LevelsEnum.Level5 && newLevel == LevelsEnum.Level5)
 			{
@@ -53,7 +58,7 @@ namespace DanikAPI.Helpers
 			return true;
 		}
 
-		public static bool ChekIfJacketNeeded(Gymnast gymnast, Gymnast updatedGymnast)
+		public bool ChekIfJacketNeeded(Gymnast gymnast, Gymnast updatedGymnast)
 		{
 			if (gymnast.Level >= LevelsEnum.Level3 && updatedGymnast.Level >= LevelsEnum.Level3)
 			{
@@ -66,10 +71,10 @@ namespace DanikAPI.Helpers
 		}
 
 
-		private static GkLeoAndJacketSizeEnum GetJacketSizeFromMeasurements(int chestMeasurement, int waistMeasurement)
+		private GkLeoAndJacketSizeEnum GetJacketSizeFromMeasurements(int chestMeasurement, int waistMeasurement)
 		{
 
-			if ((chestMeasurement >= 17 && chestMeasurement <= 19) && (waistMeasurement >= 18 && waistMeasurement <=19))
+			if ((chestMeasurement >= 17 && chestMeasurement <= 19) && (waistMeasurement >= 18 && waistMeasurement <= 19))
 			{
 				return GkLeoAndJacketSizeEnum.ChildExtraExtraSmall;
 			}
@@ -124,7 +129,7 @@ namespace DanikAPI.Helpers
 			return GkLeoAndJacketSizeEnum.Unmatched;
 		}
 
-		private static GkTorsoSizeEnum GetTorsoSizeFromMeasurements(GkLeoAndJacketSizeEnum leoAndJacketSize, int torsoMeasurement)
+		private GkTorsoSizeEnum GetTorsoSizeFromMeasurements(GkLeoAndJacketSizeEnum leoAndJacketSize, int torsoMeasurement)
 		{
 			if (leoAndJacketSize == GkLeoAndJacketSizeEnum.ChildExtraExtraSmall)
 			{
